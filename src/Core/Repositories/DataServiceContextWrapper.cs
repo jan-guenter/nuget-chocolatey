@@ -126,7 +126,8 @@ namespace NuGet
 
         public IEnumerable<T> ExecuteBatch<T>(DataServiceRequest request)
         {
-            return _context.ExecuteBatch(request)
+            var res =_context.BeginExecuteBatch(_ => { }, null, request);
+            return _context.EndExecuteBatch(res)
                            .Cast<QueryOperationResponse>()
                            .SelectMany(o => o.Cast<T>());
         }

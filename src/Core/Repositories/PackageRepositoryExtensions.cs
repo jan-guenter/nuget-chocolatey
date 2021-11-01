@@ -168,20 +168,12 @@ namespace NuGet
             }
         }
 
+        [SuppressMessage("Globalization", "CA1309:Use ordinal string comparison", Justification = "culture awareness required")]
         internal static IEnumerable<IPackage> FindPackagesByIdCore(IPackageRepository repository, string packageId)
         {
-            var cultureRepository = repository as ICultureAwareRepository;
-            if (cultureRepository != null)
-            {
-                packageId = packageId.ToLower(cultureRepository.Culture);
-            }
-            else
-            {
-                packageId = packageId.ToLower(CultureInfo.CurrentCulture);
-            }
-
+            var culture = (repository as ICultureAwareRepository)?.Culture ?? CultureInfo.CurrentCulture;
             return (from p in repository.GetPackages()
-                    where p.Id.ToLower() == packageId
+                    where string.Compare(p.Id, packageId, culture, CompareOptions.IgnoreCase) == 0
                     orderby p.Id
                     select p).ToList();
         }

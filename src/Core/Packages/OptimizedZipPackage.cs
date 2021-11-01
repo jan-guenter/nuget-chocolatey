@@ -204,8 +204,9 @@ namespace NuGet
         private void EnsureManifest()
         {
             using (Stream stream = _fileSystem.OpenFile(_packagePath))
+            using (var package = Package.Open(stream))
             {
-                using (Stream manifestStream = PackageHelper.GetManifestStream(stream))
+                using (Stream manifestStream = PackageHelper.GetManifestStream(package))
                 {
                     ReadManifest(manifestStream);
                 }
@@ -251,7 +252,7 @@ namespace NuGet
 
             using (Stream stream = GetStream())
             {
-                Package package = Package.Open(stream);
+                using Package package = Package.Open(stream);
                 // unzip files inside package
                 var files = from part in package.GetParts()
                             where ZipPackage.IsPackageFile(part, package.PackageProperties.Identifier)

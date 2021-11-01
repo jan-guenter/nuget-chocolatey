@@ -57,8 +57,9 @@ namespace NuGet
             _enableCaching = false;
             _streamFactory = stream.ToStreamFactory();
             using (stream = _streamFactory())
+            using (var package = Package.Open(stream))
             {
-                EnsureManifest(() => GetManifestStreamFromPackage(stream));
+                EnsureManifest(() => GetManifestStreamFromPackage(package));
             }
         }
 
@@ -71,8 +72,9 @@ namespace NuGet
             _enableCaching = enableCaching;
             _streamFactory = () => File.OpenRead(filePath);
             using (var stream = _streamFactory())
+            using (var package = Package.Open(stream))
             {
-                EnsureManifest(() => GetManifestStreamFromPackage(stream));
+                EnsureManifest(() => GetManifestStreamFromPackage(package));
             }
         }
 
@@ -85,8 +87,9 @@ namespace NuGet
             _enableCaching = enableCaching;
             _streamFactory = streamFactory;
             using (var stream = _streamFactory())
+            using (var package = Package.Open(stream))
             {
-                EnsureManifest(() => GetManifestStreamFromPackage(stream));
+                EnsureManifest(() => GetManifestStreamFromPackage(package));
             }
         }
 
@@ -99,7 +102,7 @@ namespace NuGet
         {
             using (Stream stream = _streamFactory())
             {
-                var package = Package.Open(stream);
+                using var package = Package.Open(stream);
 
                 foreach (var part in package.GetParts()
                     .Where(p => IsPackageFile(p, package.PackageProperties.Identifier)))
@@ -117,24 +120,21 @@ namespace NuGet
 
         public override IEnumerable<FrameworkName> GetSupportedFrameworks()
         {
-            IEnumerable<FrameworkName> fileFrameworks;
-            IEnumerable<IPackageFile> cachedFiles;
-            if (_enableCaching && MemoryCache.Instance.TryGetValue(GetFilesCacheKey(), out cachedFiles))
+            FrameworkName[] fileFrameworks;
+            if (_enableCaching && MemoryCache.Instance.TryGetValue(GetFilesCacheKey(), out IEnumerable<IPackageFile> cachedFiles))
             {
-                fileFrameworks = cachedFiles.Select(c => c.TargetFramework);
+                fileFrameworks = cachedFiles.Select(c => c.TargetFramework).ToArray();
             }
             else
             {
-                using (Stream stream = _streamFactory())
-                {
-                    var package = Package.Open(stream);
+                using var stream = _streamFactory();
+                using var package = Package.Open(stream);
 
-                    string effectivePath;
-                    fileFrameworks = from part in package.GetParts()
+                fileFrameworks = (
+                                     from part in package.GetParts()
                                      where IsPackageFile(part, Id)
-                                     select VersionUtility.ParseFrameworkNameFromFilePath(UriUtility.GetPath(part.Uri), out effectivePath);
-
-                }
+                                     select VersionUtility.ParseFrameworkNameFromFilePath(UriUtility.GetPath(part.Uri), out _)
+                                 ).ToArray();
             }
 
             return base.GetSupportedFrameworks()
@@ -173,7 +173,7 @@ namespace NuGet
         {
             using (Stream stream = _streamFactory())
             {
-                Package package = Package.Open(stream);
+                using Package package = Package.Open(stream);
 
                 return (from part in package.GetParts()
                         where IsPackageFile(part, package.PackageProperties.Identifier)
@@ -189,10 +189,8 @@ namespace NuGet
             }
         }
 
-        private static Stream GetManifestStreamFromPackage(Stream packageStream)
+        private static Stream GetManifestStreamFromPackage(Package package)
         {
-            Package package = Package.Open(packageStream);
-
             PackageRelationship relationshipType = package.GetRelationshipsByType(Constants.PackageRelationshipNamespace + PackageBuilder.ManifestRelationType).SingleOrDefault();
 
             if (relationshipType == null)

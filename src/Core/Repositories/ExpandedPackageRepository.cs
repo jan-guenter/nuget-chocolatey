@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.IO;
+using System.IO.Packaging;
 using System.Linq;
 using System.Text;
 using System.Xml;
@@ -56,8 +57,9 @@ namespace NuGet
             _fileSystem.AddFile(hashFilePath, hashFileStream => { hashFileStream.Write(hashBytes, 0, hashBytes.Length); });
 
             using (var stream = package.GetStream())
+            using (var p = Package.Open(stream))
             {
-                using (var manifestStream = PackageHelper.GetManifestStream(stream))
+                using (var manifestStream = PackageHelper.GetManifestStream(p))
                 {
                     var manifestPath = Path.Combine(packagePath, package.Id + Constants.ManifestExtension);
                     _fileSystem.AddFile(manifestPath, manifestStream);
@@ -110,8 +112,9 @@ namespace NuGet
                         Logger.Log(MessageLevel.Warning, ex.Message);
                         Logger.Log(
                             MessageLevel.Warning, 
-                            NuGetResources.Manifest_NotFound, 
-                            string.Format("{0}/{1}", packageId, version));
+                            NuGetResources.Manifest_NotFound,
+                            $"{packageId}/{version}"
+                        );
                         continue;
                     }
                     catch (IOException ex)
@@ -119,8 +122,9 @@ namespace NuGet
                         Logger.Log(MessageLevel.Warning, ex.Message);
                         Logger.Log(
                             MessageLevel.Warning, 
-                            NuGetResources.Manifest_NotFound, 
-                            string.Format("{0}/{1}", packageId, version));
+                            NuGetResources.Manifest_NotFound,
+                            $"{packageId}/{version}"
+                        );
                         continue;
                     }
 

@@ -452,7 +452,7 @@ namespace NuGet
                 // OData requires that a single quote MUST be escaped as 2 single quotes.
                 // In .NET 4.5, Uri.EscapeDataString() escapes single quote as %27. Thus we must replace %27 with 2 single quotes.
                 // In .NET 4.0, Uri.EscapeDataString() doesn't escape single quote. Thus we must replace it with 2 single quotes.
-                return Uri.EscapeDataString(value).Replace("'", "''").Replace("%27", "''");
+                return Uri.EscapeDataString(value).Replace("'", "''", StringComparison.Ordinal).Replace("%27", "''", StringComparison.Ordinal);
             }
 
             return value;

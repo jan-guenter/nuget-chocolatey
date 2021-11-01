@@ -9,7 +9,7 @@ namespace NuGet.Test
     public class SemanticVersionTest
     {
         [Theory]
-        [PropertyData("ConstructorData")]
+        [MemberData(nameof(ConstructorData))]
         public void StringConstructorParsesValuesCorrectly(string version, Version versionValue, string specialValue, int packageReleaseVersion)
         {
             // Act
@@ -73,7 +73,7 @@ namespace NuGet.Test
         }
 
         [Theory]
-        [PropertyData("LegacyVersionData")]
+        [MemberData(nameof(LegacyVersionData))]
         public void ParseReadsLegacyStyleVersionNumbers(string versionString, SemanticVersion expected)
         {
             // Act
@@ -97,7 +97,7 @@ namespace NuGet.Test
         }
 
         [Theory]
-        [PropertyData("SemVerData")]
+        [MemberData(nameof(SemVerData))]
         public void ParseReadsSemverAndHybridSemverVersionNumbers(string versionString, SemanticVersion expected)
         {
             // Act
@@ -120,7 +120,7 @@ namespace NuGet.Test
         }
 
         [Theory]
-        [PropertyData("SemVerWithWhiteSpace")]
+        [MemberData(nameof(SemVerWithWhiteSpace))]
         public void ParseIgnoresLeadingAndTrailingWhitespace(string versionString, SemanticVersion expected)
         {
             // Act
@@ -263,7 +263,7 @@ namespace NuGet.Test
         }
 
         [Theory]
-        [PropertyDataAttribute("ToStringFromVersionData")]
+        [MemberData(nameof(ToStringFromVersionData))]
         public void ToStringConstructedFromVersionAndSpecialVersionConstructor(Version version, string specialVersion, int packageReleaseVersion, string expected)
         {
             // Act

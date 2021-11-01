@@ -42,7 +42,7 @@ namespace NuGet
 
         public override int GetHashCode()
         {
-            return _packageId.GetHashCode() * 3137 + _version.GetHashCode();
+            return _packageId.GetHashCode(StringComparison.Ordinal) * 3137 + _version.GetHashCode();
         }
 
         public override string ToString()

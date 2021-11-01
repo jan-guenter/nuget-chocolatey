@@ -260,7 +260,7 @@ namespace NuGet
                 var cache = new List<DownloadCache>();
                 foreach (var downloadString in DownloadCache.Split(new[] { '|' }, StringSplitOptions.RemoveEmptyEntries).ToList())
                 {
-                    if (downloadString.Contains("^"))
+                    if (downloadString.Contains('^', StringComparison.Ordinal))
                     {
                         var cacheValues = downloadString.Split(new[] { '^' }, StringSplitOptions.RemoveEmptyEntries);
                         if (cacheValues.Count() < 3) continue;

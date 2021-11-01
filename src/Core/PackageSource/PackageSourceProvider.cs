@@ -190,6 +190,7 @@ namespace NuGet
             }
         }
 
+        [SuppressMessage("Globalization", "CA1309:Use ordinal string comparison", Justification = "culture awareness required")]
         private void SetDefaultPackageSources(List<PackageSource> loadedPackageSources)
         {
             // There are 4 different cases to consider for default package sources

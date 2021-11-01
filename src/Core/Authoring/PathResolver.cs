@@ -52,20 +52,20 @@ namespace NuGet
             {
                 // regex wildcard adjustments for *nix-style file systems
                 pattern = pattern
-                    .Replace(@"\*\*/", ".*") //For recursive wildcards /**/, include the current directory.
-                    .Replace(@"\*\*", ".*") // For recursive wildcards that don't end in a slash e.g. **.txt would be treated as a .txt file at any depth
-                    .Replace(@"\*", @"[^/]*(/)?") // For non recursive searches, limit it any character that is not a directory separator
-                    .Replace(@"\?", "."); // ? translates to a single any character
+                    .Replace(@"\*\*/", ".*", StringComparison.Ordinal) //For recursive wildcards /**/, include the current directory.
+                    .Replace(@"\*\*", ".*", StringComparison.Ordinal) // For recursive wildcards that don't end in a slash e.g. **.txt would be treated as a .txt file at any depth
+                    .Replace(@"\*", @"[^/]*(/)?", StringComparison.Ordinal) // For non recursive searches, limit it any character that is not a directory separator
+                    .Replace(@"\?", ".", StringComparison.Ordinal); // ? translates to a single any character
             }
             else
             {
                 // regex wildcard adjustments for Windows-style file systems
                 pattern = pattern
-                    .Replace("/", @"\\") // On Windows, / is treated the same as \.
-                    .Replace(@"\*\*\\", ".*") //For recursive wildcards \**\, include the current directory.
-                    .Replace(@"\*\*", ".*") // For recursive wildcards that don't end in a slash e.g. **.txt would be treated as a .txt file at any depth
-                    .Replace(@"\*", @"[^\\]*(\\)?") // For non recursive searches, limit it any character that is not a directory separator
-                    .Replace(@"\?", "."); // ? translates to a single any character
+                    .Replace("/", @"\\", StringComparison.Ordinal) // On Windows, / is treated the same as \.
+                    .Replace(@"\*\*\\", ".*", StringComparison.Ordinal) //For recursive wildcards \**\, include the current directory.
+                    .Replace(@"\*\*", ".*", StringComparison.Ordinal) // For recursive wildcards that don't end in a slash e.g. **.txt would be treated as a .txt file at any depth
+                    .Replace(@"\*", @"[^\\]*(\\)?", StringComparison.Ordinal) // For non recursive searches, limit it any character that is not a directory separator
+                    .Replace(@"\?", ".", StringComparison.Ordinal); // ? translates to a single any character
             }
 
             return new Regex('^' + pattern + '$', RegexOptions.IgnoreCase | RegexOptions.ExplicitCapture);
@@ -121,7 +121,7 @@ namespace NuGet
             // (a) Path is not recursive search
             bool isRecursiveSearch = searchPath.IndexOf("**", StringComparison.OrdinalIgnoreCase) != -1;
             // (b) Path does not have any wildcards.
-            bool isWildcardPath = Path.GetDirectoryName(searchPath).Contains('*');
+            bool isWildcardPath = Path.GetDirectoryName(searchPath).Contains('*', StringComparison.Ordinal);
             if (!isRecursiveSearch && !isWildcardPath)
             {
                 searchOption = SearchOption.TopDirectoryOnly;
@@ -155,7 +155,7 @@ namespace NuGet
         internal static string GetPathToEnumerateFrom(string basePath, string searchPath)
         {
             string basePathToEnumerate;
-            int wildcardIndex = searchPath.IndexOf('*');
+            int wildcardIndex = searchPath.IndexOf('*', StringComparison.Ordinal);
             if (wildcardIndex == -1)
             {
                 // For paths without wildcard, we could either have base relative paths (such as lib\foo.dll) or paths outside the base path
@@ -238,7 +238,7 @@ namespace NuGet
         /// </summary>
         internal static bool IsWildcardSearch(string filter)
         {
-            return filter.IndexOf('*') != -1;
+            return filter.IndexOf('*', StringComparison.Ordinal) != -1;
         }
 
         internal static bool IsDirectoryPath(string path)

@@ -12,7 +12,7 @@ using NuGet.Resources;
 namespace NuGet
 {
     [XmlType("metadata")]
-    public class ManifestMetadata : IPackageMetadata, IValidatableObject
+    public sealed class ManifestMetadata : IPackageMetadata, IValidatableObject
     {
         private string _owners;
         private string _minClientVersionString;
@@ -537,54 +537,54 @@ namespace NuGet
                 }
             }
 
-            if (LicenseUrl == String.Empty)
+            if (LicenseUrl?.Length == 0)
             {
                 yield return new ValidationResult(
                     String.Format(CultureInfo.CurrentCulture, NuGetResources.Manifest_UriCannotBeEmpty, "LicenseUrl"));
             }
 
-            if (IconUrl == String.Empty)
+            if (IconUrl?.Length == 0)
             {
                 yield return new ValidationResult(
                     String.Format(CultureInfo.CurrentCulture, NuGetResources.Manifest_UriCannotBeEmpty, "IconUrl"));
             }
 
-            if (ProjectUrl == String.Empty)
+            if (ProjectUrl?.Length == 0)
             {
                 yield return new ValidationResult(
                     String.Format(CultureInfo.CurrentCulture, NuGetResources.Manifest_UriCannotBeEmpty, "ProjectUrl"));
             }
 
-            if (ProjectSourceUrl == String.Empty)
+            if (ProjectSourceUrl?.Length == 0)
             {
                 yield return new ValidationResult(
                     String.Format(CultureInfo.CurrentCulture, NuGetResources.Manifest_UriCannotBeEmpty, "ProjectSourceUrl"));
             }
-            if (PackageSourceUrl == String.Empty)
+            if (PackageSourceUrl?.Length == 0)
             {
                 yield return new ValidationResult(
                     String.Format(CultureInfo.CurrentCulture, NuGetResources.Manifest_UriCannotBeEmpty, "PackageSourceUrl"));
             }
 
-            if (DocsUrl == String.Empty)
+            if (DocsUrl?.Length == 0)
             {
                 yield return new ValidationResult(
                     String.Format(CultureInfo.CurrentCulture, NuGetResources.Manifest_UriCannotBeEmpty, "DocsUrl"));
             }
 
-            if (WikiUrl == String.Empty)
+            if (WikiUrl?.Length == 0)
             {
                 yield return new ValidationResult(
                     String.Format(CultureInfo.CurrentCulture, NuGetResources.Manifest_UriCannotBeEmpty, "WikiUrl"));
             }
 
-            if (MailingListUrl == String.Empty)
+            if (MailingListUrl?.Length == 0)
             {
                 yield return new ValidationResult(
                     String.Format(CultureInfo.CurrentCulture, NuGetResources.Manifest_UriCannotBeEmpty, "MailingListUrl"));
             }
 
-            if (BugTrackerUrl == String.Empty)
+            if (BugTrackerUrl?.Length == 0)
             {
                 yield return new ValidationResult(
                     String.Format(CultureInfo.CurrentCulture, NuGetResources.Manifest_UriCannotBeEmpty, "BugTrackerUrl"));

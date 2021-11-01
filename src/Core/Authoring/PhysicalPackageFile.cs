@@ -87,6 +87,7 @@ namespace NuGet
             }
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Reliability", "CA2000:Dispose objects before losing scope", Justification = "Caller needs to ensure disposal of returned stream")]
         public Stream GetStream()
         {
             return _streamFactory != null ? _streamFactory() : File.OpenRead(SourcePath);
@@ -110,12 +111,12 @@ namespace NuGet
             int hash = 0;
             if (SourcePath != null)
             {
-                hash = SourcePath.GetHashCode();
+                hash = SourcePath.GetHashCode(StringComparison.Ordinal);
             }
 
             if (TargetPath != null)
             {
-                hash = hash * 4567 + TargetPath.GetHashCode();
+                hash = hash * 4567 + TargetPath.GetHashCode(StringComparison.Ordinal);
             }
 
             return hash;

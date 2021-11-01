@@ -31,7 +31,7 @@ namespace NuGet
 
         public override int GetHashCode()
         {
-            return InstallExtension.GetHashCode() * 3137 + UninstallExtension.GetHashCode();
+            return InstallExtension.GetHashCode(StringComparison.Ordinal) * 3137 + UninstallExtension.GetHashCode(StringComparison.Ordinal);
         }
     }
 }

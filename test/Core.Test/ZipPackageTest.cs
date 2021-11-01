@@ -101,7 +101,7 @@ namespace NuGet.Test
         }
 
         [Theory]
-        [PropertyData("GetSupportedFrameworkUsesFrameworkAssembliesToDetermineTargetFrameworkData")]
+        [MemberData(nameof(GetSupportedFrameworkUsesFrameworkAssembliesToDetermineTargetFrameworkData))]
         public void GetSupportedFrameworkUsesFrameworkAssembliesToDetermineTargetFramework(IEnumerable<FrameworkAssemblyReference> assemblyReferences, IEnumerable<FrameworkName> expectedFramework)
         {
             // Arrange

@@ -109,9 +109,8 @@ namespace NuGet
             return package;
         }
 
-        internal static Stream GetManifestStream(Stream packageStream)
+        internal static Stream GetManifestStream(Package package)
         {
-            Package package = Package.Open(packageStream);
             PackageRelationship relationshipType = package.GetRelationshipsByType(Constants.PackageRelationshipNamespace + PackageBuilder.ManifestRelationType).SingleOrDefault();
 
             if (relationshipType == null)

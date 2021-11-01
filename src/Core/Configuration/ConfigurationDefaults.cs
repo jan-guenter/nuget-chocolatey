@@ -54,6 +54,7 @@ namespace NuGet
             }
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Globalization", "CA1309:Use ordinal string comparison", Justification = "culture awareness required")]
         public IEnumerable<PackageSource> DefaultPackageSources
         {
             get

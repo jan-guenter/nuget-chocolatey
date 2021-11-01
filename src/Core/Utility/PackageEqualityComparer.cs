@@ -9,11 +9,11 @@ namespace NuGet
         [SuppressMessage("Microsoft.Security", "CA2104:DoNotDeclareReadOnlyMutableReferenceTypes", Justification = "This type isn't mutable")]
         public static readonly PackageEqualityComparer IdAndVersion = new PackageEqualityComparer((x, y) => x.Id.Equals(y.Id, StringComparison.OrdinalIgnoreCase) &&
                                                                                                                     x.Version.Equals(y.Version),
-                                                                                                   x => x.Id.GetHashCode() ^ x.Version.GetHashCode());
+                                                                                                   x => x.Id.GetHashCode(StringComparison.Ordinal) ^ x.Version.GetHashCode());
 
         [SuppressMessage("Microsoft.Security", "CA2104:DoNotDeclareReadOnlyMutableReferenceTypes", Justification = "This type isn't mutable")]
         public static readonly PackageEqualityComparer Id = new PackageEqualityComparer((x, y) => x.Id.Equals(y.Id, StringComparison.OrdinalIgnoreCase),
-                                                                                         x => x.Id.GetHashCode());
+                                                                                         x => x.Id.GetHashCode(StringComparison.Ordinal));
 
         private readonly Func<IPackageName, IPackageName, bool> _equals;
         private readonly Func<IPackageName, int> _getHashCode;

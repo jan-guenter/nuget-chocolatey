@@ -7,22 +7,17 @@ namespace NuGet.Test
 {
     public class NullSettingsTest
     {
-        public static IEnumerable<object[]> WriteOperationsData
-        {
-            get
-            {
-                var settings = NullSettings.Instance;
-                yield return new object[] { (Assert.ThrowsDelegate)(() => settings.SetValue("section", "key", "value")), "SetValue" };
-                yield return new object[] { (Assert.ThrowsDelegate)(() => settings.SetValues("section", new[] { new SettingValue("key", "value", false) })), "SetValues" };
-                yield return new object[] { (Assert.ThrowsDelegate)(() => settings.SetNestedValues("section", "key", new[] { new KeyValuePair<string, string>("key1", "value1") })), "SetNestedValues" };
-                yield return new object[] { (Assert.ThrowsDelegate)(() => settings.DeleteSection("section")), "DeleteSection" };
-                yield return new object[] { (Assert.ThrowsDelegate)(() => settings.DeleteValue("section", "key")), "DeleteValue" };
-            }
-        }
+        public static object[][] WriteOperationsData = {
+            new object[]{ (Action)(() => NullSettings.Instance.SetValue("section", "key", "value")), "SetValue" },
+            new object[]{ (Action)(() => NullSettings.Instance.SetValues("section", new[] { new SettingValue("key", "value", false) })), "SetValues" },
+            new object[]{ (Action)(() => NullSettings.Instance.SetNestedValues("section", "key", new[] { new KeyValuePair<string, string>("key1", "value1") })), "SetNestedValues" },
+            new object[]{ (Action)(() => NullSettings.Instance.DeleteSection("section")), "DeleteSection" },
+            new object[]{ (Action)(() => NullSettings.Instance.DeleteValue("section", "key")), "DeleteValue" },
+        };
 
         [Theory]
-        [PropertyData("WriteOperationsData")]
-        public void NullSettingsThrowsIfWriteOperationMethodsAreInvoked(Assert.ThrowsDelegate throwsDelegate, string methodName)
+        [MemberData(nameof(WriteOperationsData))]
+        public void NullSettingsThrowsIfWriteOperationMethodsAreInvoked(Action throwsDelegate, string methodName)
         {
             // Act and Assert
             ExceptionAssert.Throws<InvalidOperationException>(throwsDelegate,

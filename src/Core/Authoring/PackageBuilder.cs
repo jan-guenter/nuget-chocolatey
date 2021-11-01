@@ -11,7 +11,7 @@ using NuGet.Resources;
 
 namespace NuGet
 {
-    public class PackageBuilder : IPackageBuilder
+    public sealed class PackageBuilder : IPackageBuilder
     {
         private const string DefaultContentType = "application/octet";
         internal const string ManifestRelationType = "manifest";
@@ -159,9 +159,9 @@ namespace NuGet
         public Uri WikiUrl { get; set; }
         public Uri MailingListUrl { get; set; }
         public Uri BugTrackerUrl { get; set; }
-        public ISet<string> Replaces { get; set; }
-        public ISet<string> Provides { get; set; }
-        public ISet<string> Conflicts { get; set; }
+        public ISet<string> Replaces { get; }
+        public ISet<string> Provides { get; }
+        public ISet<string> Conflicts { get; }
 
         public string SoftwareDisplayName { get; set; }
         public string SoftwareDisplayVersion { get; set; }
@@ -303,7 +303,7 @@ namespace NuGet
                 WriteFiles(package);
 
                 // Copy the metadata properties back to the package
-                package.PackageProperties.Creator = SecurityElement.Escape(String.Join(",", Authors));
+                package.PackageProperties.Creator = SecurityElement.Escape(String.Join(",", Authors, StringComparison.Ordinal));
                 package.PackageProperties.Description = SecurityElement.Escape(Description);
                 package.PackageProperties.Identifier = Id;
                 package.PackageProperties.Version = Version.ToString();
@@ -328,7 +328,7 @@ namespace NuGet
                 creatorInfo.Add(attribute.FrameworkDisplayName);
             }
 
-            return String.Join(";", creatorInfo);
+            return String.Join(";", creatorInfo, StringComparison.Ordinal);
         }
 
         private static int DetermineMinimumSchemaVersion(
@@ -456,7 +456,7 @@ namespace NuGet
             {
                 if (manifest.Files == null)
                 {
-                    AddFiles(basePath, string.Format("**{0}*", Path.DirectorySeparatorChar), null);
+                    AddFiles(basePath, $"**{Path.DirectorySeparatorChar}*", null);
                 }
                 else
                 {
@@ -551,7 +551,7 @@ namespace NuGet
                     }
                     catch
                     {
-                        Console.WriteLine(file.Path);
+                        Console.WriteLine(file.Path, StringComparison.Ordinal);
                         throw;
                     }
                 }

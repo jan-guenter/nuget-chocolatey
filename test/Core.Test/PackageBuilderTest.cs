@@ -1820,7 +1820,7 @@ Description is required.");
         }
 
         [Theory]
-        [PropertyData("InvalidDependencyData")]
+        [MemberData(nameof(InvalidDependencyData))]
         public void ValidateDependenciesThrowsIfAnyDependencyForAStableReleaseIsPrerelease(VersionSpec versionSpec)
         {
             // Arrange
@@ -1843,7 +1843,7 @@ Description is required.");
         }
 
         [Theory]
-        [PropertyData("InvalidDependencyData")]
+        [MemberData(nameof(InvalidDependencyData))]
         public void ValidateDependenciesDoesNotThrowIfDependencyForAPrereleaseVersionIsPrerelease(VersionSpec versionSpec)
         {
             // Arrange

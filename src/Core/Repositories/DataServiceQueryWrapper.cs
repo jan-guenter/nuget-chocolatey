@@ -93,7 +93,11 @@ namespace NuGet
 
         private IEnumerable<T> GetAll()
         {
-            IEnumerable results = Execute(_query.Execute);
+            IEnumerable results = Execute(() =>
+            {
+                var res = _query.BeginExecute(_ => { }, null);
+                return _query.EndExecute(res);
+            });
 
             DataServiceQueryContinuation continuation;
             do

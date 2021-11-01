@@ -56,7 +56,7 @@ namespace NuGet.Test
         }
 
         [Theory]
-        [PropertyData("OperationsWithoutSatellitePackages")]
+        [MemberData(nameof(OperationsWithoutSatellitePackages))]
         public void ReduceRemovesOpposingActionsFromTheList(IEnumerable<PackageOperation> source, IEnumerable<PackageOperation> expected)
         {
             // Act
@@ -119,7 +119,7 @@ namespace NuGet.Test
         }
 
         [Theory]
-        [PropertyData("OperationsWithSatellitePackages")]
+        [MemberData(nameof(OperationsWithSatellitePackages))]
         public void ReduceRemovesOpposingActionsFromTheListReordersSatellitePackages(IEnumerable<PackageOperation> source, IEnumerable<PackageOperation> expected)
         {
             // Act

@@ -51,7 +51,7 @@ namespace NuGet.Test.Extensions
         }
 
         [Theory]
-        [PropertyData("LotsOfVersions")]
+        [MemberData(nameof(LotsOfVersions))]
         public void ToDelegateOutputWorksWithPlainSemVers(string verSpec, string semVer, bool expected)
         {
             // Arrange
@@ -63,7 +63,7 @@ namespace NuGet.Test.Extensions
         }
 
         [Theory]
-        [PropertyData("LotsOfVersions")]
+        [MemberData(nameof(LotsOfVersions))]
         public void ToDelegateOutputWorksWithPackages(string verSpec, string semVer, bool expected)
         {
             // Arrange
@@ -76,7 +76,7 @@ namespace NuGet.Test.Extensions
         }
 
         [Theory]
-        [PropertyData("LotsOfVersions")]
+        [MemberData(nameof(LotsOfVersions))]
         public void SatisfiesReturnsExpectedValues(string verSpec, string semVer, bool expected)
         {
             // Arrange

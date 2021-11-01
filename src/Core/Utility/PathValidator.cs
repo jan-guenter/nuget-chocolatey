@@ -1,13 +1,14 @@
 ﻿using System;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
+using System.Linq;
 using System.Text.RegularExpressions;
 
 namespace NuGet
 {
     public static class PathValidator
     {
-        private static readonly char[] _invalidPathChars = Path.GetInvalidPathChars();
+        private static readonly char[] _invalidFileNameChars = Path.GetInvalidFileNameChars();
         /// <summary>
         /// Validates that a source is a valid path or url.
         /// </summary>
@@ -33,17 +34,14 @@ namespace NuGet
         {
             try
             {
-                if (!(Environment.OSVersion.Platform == PlatformID.MacOSX ||
-                    Environment.OSVersion.Platform == PlatformID.Unix))
+                return Path.IsPathRooted(path) &&
+                path.Split(Path.DirectorySeparatorChar).Select((part, i) =>
                 {
-                    // Checking driver letter on Windows
-                    if (!Regex.IsMatch(path.Trim(), @"^[A-Za-z]:\\"))
-                    {
-                        return false;
+                    if (i == 0 && !(Environment.OSVersion.Platform == PlatformID.MacOSX || Environment.OSVersion.Platform == PlatformID.Unix)) {
+                        return Regex.IsMatch(part, "^[A-Za-z]:$");
                     }
-                }
-
-                return Path.IsPathRooted(path) && (path.IndexOfAny(_invalidPathChars) == -1);
+                    return part.All(c => !_invalidFileNameChars.Contains(c));
+                }).All(x => x);
             }
             catch
             {
@@ -66,8 +64,11 @@ namespace NuGet
         {
             try
             {
-                Path.GetFullPath(path);
-                return Regex.IsMatch(path.Trim(), @"^\\\\");
+                var split = path.TrimEnd(Path.DirectorySeparatorChar).Split(Path.DirectorySeparatorChar);
+                return split.Length > 3 && 
+                       split[0].Length == 0 && 
+                       split[1].Length == 0 && 
+                       split.Skip(2).All(part => part.All(c => !_invalidFileNameChars.Contains(c)));
             }
             catch
             {

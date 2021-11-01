@@ -1,5 +1,6 @@
 using System;
 using System.Diagnostics;
+using System.Globalization;
 using System.Text;
 
 namespace NuGet
@@ -27,7 +28,7 @@ namespace NuGet
             {
                 builder.Append(TargetFramework).Append(" ");
             }
-            builder.Append(Name).AppendFormat(" ({0})", Path);
+            builder.Append(Name).AppendFormat(CultureInfo.InvariantCulture, " ({0})", Path);
             return builder.ToString();
         }
     }

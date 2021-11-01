@@ -72,6 +72,7 @@ namespace NuGet
             ProgressAvailable(this, e);
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Security", "CA2109:Review visible event handlers", Justification = "<Pending>")]
         protected virtual void OnSendingRequest(object sender, WebRequestEventArgs webRequestArgs)
         {
             SendingRequest(this, webRequestArgs);

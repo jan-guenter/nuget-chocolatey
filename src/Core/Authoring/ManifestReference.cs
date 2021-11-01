@@ -36,7 +36,7 @@ namespace NuGet
 
         public override int GetHashCode()
         {
-            return File == null ? 0 : File.GetHashCode();
+            return File == null ? 0 : File.GetHashCode(StringComparison.Ordinal);
         }
     }
 }

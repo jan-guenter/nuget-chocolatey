@@ -334,7 +334,7 @@ namespace NuGet
                 }
 
                 // Use 5.0 instead of 0.0 as the default for NetPlatform
-                version = identifierPart.Equals(NetPlatformFrameworkIdentifier) ? new Version(5, 0) : _emptyVersion;
+                version = identifierPart.Equals(NetPlatformFrameworkIdentifier, StringComparison.Ordinal) ? new Version(5, 0) : _emptyVersion;
             }
 
             if (String.IsNullOrEmpty(identifierPart))
@@ -358,12 +358,12 @@ namespace NuGet
                 throw new ArgumentException(NuGetResources.PortableFrameworkProfileEmpty, "profilePart");
             }
 
-            if (profilePart.Contains('-'))
+            if (profilePart.Contains('-', StringComparison.Ordinal))
             {
                 throw new ArgumentException(NuGetResources.PortableFrameworkProfileHasDash, "profilePart");
             }
 
-            if (profilePart.Contains(' '))
+            if (profilePart.Contains(' ', StringComparison.Ordinal))
             {
                 throw new ArgumentException(NuGetResources.PortableFrameworkProfileHasSpace, "profilePart");
             }
@@ -676,7 +676,7 @@ namespace NuGet
                     else
                     {
                         // Express the version without decimals
-                        name += frameworkName.Version.ToString().Replace(".", String.Empty);
+                        name += frameworkName.Version.ToString().Replace(".", String.Empty, StringComparison.Ordinal);
                     }
                 }
 

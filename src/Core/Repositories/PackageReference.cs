@@ -35,7 +35,7 @@ namespace NuGet
 
         public override int GetHashCode()
         {
-            return Id.GetHashCode() * 3137 + (Version == null ? 0 : Version.GetHashCode());
+            return Id.GetHashCode(StringComparison.Ordinal) * 3137 + (Version == null ? 0 : Version.GetHashCode());
         }
 
         public override string ToString()

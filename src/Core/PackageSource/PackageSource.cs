@@ -66,9 +66,10 @@ namespace NuGet
             IsEnabled = isEnabled;
             IsOfficial = isOfficial;
             ProtocolVersion = DefaultProtocolVersion;
-            _hashCode = Name.ToUpperInvariant().GetHashCode() * 3137 + Source.ToUpperInvariant().GetHashCode();
+            _hashCode = Name.ToUpperInvariant().GetHashCode(StringComparison.Ordinal) * 3137 + Source.ToUpperInvariant().GetHashCode(StringComparison.Ordinal);
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Globalization", "CA1309:Use ordinal string comparison", Justification = "culture awareness required")]
         public bool Equals(PackageSource other)
         {
             if (other == null)

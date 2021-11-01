@@ -63,7 +63,7 @@ namespace NuGet
             Version = NormalizeVersionValue(version);
             SpecialVersion = specialVersion ?? String.Empty;
             PackageReleaseVersion = packageReleaseVersion;
-            _originalString = String.IsNullOrEmpty(originalString) ? version.ToString() + (!String.IsNullOrEmpty(specialVersion) ? '-' + specialVersion : null) + (packageReleaseVersion != 0 ? '_' + packageReleaseVersion.ToString() : null) : originalString;
+            _originalString = String.IsNullOrEmpty(originalString) ? version.ToString() + (!String.IsNullOrEmpty(specialVersion) ? '-' + specialVersion : null) + (packageReleaseVersion != 0 ? '_' + packageReleaseVersion.ToString(CultureInfo.InvariantCulture) : null) : originalString;
         }
 
         internal SemanticVersion(SemanticVersion semVer)
@@ -93,7 +93,7 @@ namespace NuGet
                 string original = _originalString;
 
                 // search the start of the SpecialVersion part, if any
-                int dashIndex = original.IndexOf('-');
+                int dashIndex = original.IndexOf('-', StringComparison.Ordinal);
                 if (dashIndex != -1)
                 {
                     // remove the SpecialVersion part
@@ -101,7 +101,7 @@ namespace NuGet
                 }
 
                 // search the start of the ReleaseVersion part, if any
-                int packageFixIndex = original.IndexOf('_');
+                int packageFixIndex = original.IndexOf('_', StringComparison.Ordinal);
                 if (packageFixIndex != -1)
                 {
                     // remove the PackageReleaseVersion part
@@ -182,7 +182,7 @@ namespace NuGet
                 return false;
             }
 
-            semVer = new SemanticVersion(NormalizeVersionValue(versionValue), match.Groups["Prerelease"].Value.TrimStart('-'), TryParseNumeric(match.Groups["PackageVersion"].Value.TrimStart('_')), version.Replace(" ", ""));
+            semVer = new SemanticVersion(NormalizeVersionValue(versionValue), match.Groups["Prerelease"].Value.TrimStart('-'), TryParseNumeric(match.Groups["PackageVersion"].Value.TrimStart('_')), version.Replace(" ", "", StringComparison.Ordinal));
             return true;
         }
 
@@ -374,7 +374,7 @@ namespace NuGet
             int hashCode = Version.GetHashCode();
             if (SpecialVersion != null)
             {
-                hashCode = hashCode * 4567 + SpecialVersion.GetHashCode();
+                hashCode = hashCode * 4567 + SpecialVersion.GetHashCode(StringComparison.Ordinal);
             }
             if (PackageReleaseVersion != 0)
             {

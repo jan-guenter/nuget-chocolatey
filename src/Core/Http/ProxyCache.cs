@@ -189,7 +189,7 @@ namespace NuGet
                 if (proxyUri != null)
                 {
                     Uri proxyAddress = new Uri(proxyUri.AbsoluteUri);
-                    if (String.Equals(proxyAddress.AbsoluteUri, uri.AbsoluteUri))
+                    if (String.Equals(proxyAddress.AbsoluteUri, uri.AbsoluteUri, StringComparison.Ordinal))
                     {
                         return false;
                     }

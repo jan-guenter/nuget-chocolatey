@@ -18,21 +18,21 @@ namespace NuGet
         public static XDocument LoadSafe(Stream input)
         {
             var settings = CreateSafeSettings();
-            var reader = XmlReader.Create(input, settings);
+            using var reader = XmlReader.Create(input, settings);
             return XDocument.Load(reader);
         }
 
         public static XDocument LoadSafe(Stream input, bool ignoreWhiteSpace)
         {
             var settings = CreateSafeSettings(ignoreWhiteSpace);
-            var reader = XmlReader.Create(input, settings);
+            using var reader = XmlReader.Create(input, settings);
             return XDocument.Load(reader);
         }
 
         public static XDocument LoadSafe(Stream input, LoadOptions options)
         {
             var settings = CreateSafeSettings();
-            var reader = XmlReader.Create(input, settings);
+            using var reader = XmlReader.Create(input, settings);
             return XDocument.Load(reader, options);
         }
 

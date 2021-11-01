@@ -715,7 +715,7 @@ namespace NuGet
 
             public int GetHashCode(IPackageFile obj)
             {
-                return obj.Path.GetHashCode();
+                return obj.Path.GetHashCode(StringComparison.Ordinal);
             }
         }
     }

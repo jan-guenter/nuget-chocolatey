@@ -36,9 +36,11 @@ namespace NuGet
             return new PriorityPackageRepository(primaryRepository, fallbackRepository);
         }
 
+
         /// <summary>
         /// Resolves a package source by either Name or Source.
         /// </summary>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Globalization", "CA1309:Use ordinal string comparison", Justification = "culture awareness required")]
         public static string ResolveSource(this IPackageSourceProvider provider, string value)
         {
             var resolvedSource = (from source in provider.GetEnabledPackageSources()

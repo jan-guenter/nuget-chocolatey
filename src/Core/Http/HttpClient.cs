@@ -228,6 +228,7 @@ namespace NuGet
             ProgressAvailable(this, new ProgressEventArgs(percentage));
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Design", "CA1030:Use events where appropriate", Justification = "<Pending>")]
         protected void RaiseSendingRequest(WebRequest webRequest)
         {
             SendingRequest(this, new WebRequestEventArgs(webRequest));

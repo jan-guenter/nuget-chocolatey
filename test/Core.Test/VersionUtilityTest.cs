@@ -847,7 +847,7 @@ namespace NuGet.Test
         }
 
         [Theory]
-        [PropertyData("TrimVersionData")]
+        [MemberData(nameof(TrimVersionData))]
         public void TrimVersionTrimsRevisionIfZero(Version version, Version expected)
         {
             // Act
@@ -1264,7 +1264,7 @@ namespace NuGet.Test
         }
 
         [Theory]
-        [PropertyData("VersionSpecData")]
+        [MemberData(nameof(VersionSpecData))]
         public void ParseVersionParsesTokensVersionsCorrectly(string versionString, VersionSpec versionSpec)
         {
             // Act
